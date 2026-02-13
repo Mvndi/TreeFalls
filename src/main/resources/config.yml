@@ -1,0 +1,6 @@
+debug: false
+
+# List of game mode where the player is can cut trees by breaking a single log.
+# Default: SURVIVAL
+enabled_gamemode:
+  - SURVIVAL

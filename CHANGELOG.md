@@ -1,7 +1,7 @@
 
 
 # 0.0.2
-When broken, logs & woods fall as sand do then breaking when reaching the ground.
+When broken, logs & woods fall as sand/gravel does then break when reaching the ground.
 
 # 0.0.1
 Init project

@@ -4,14 +4,14 @@ plugins {
     `maven-publish`
     // checkstyle // Ensures correctly formatted code
     // pmd // Code quality checks
-    // id("org.sonarqube") version "6.0.1.5171" // Advanced code quality checks
+    id("org.sonarqube") version "7.2.2.6593" // Advanced code quality checks
     id("xyz.jpenilla.run-paper") version "2.3.1" // Paper server for testing/hotloading JVM
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
 }
 
 group = "net.mvndicraft.treefalls"
-version = "0.0.2"
+version = "0.0.3"
 description = "Smooth tree falling when a log get broken by an axe"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
@@ -37,13 +37,13 @@ dependencies {
     testImplementation("com.github.seeseemelk:MockBukkit-v1.21:3.107.0")
 }
 
-// sonar {
-//   properties {
-//     property("sonar.projectKey", "...")
-//     property("sonar.projectName", project.name)
-//     property("sonar.host.url", "https://mvndisonar.formiko.fr")
-//   }
-// }
+sonar {
+  properties {
+    property("sonar.projectKey", project.name)
+    property("sonar.projectName", project.name)
+    property("sonar.host.url", "https://mvndisonar.formiko.fr")
+  }
+}
 
 publishing {
     publications.create<MavenPublication>("maven") {

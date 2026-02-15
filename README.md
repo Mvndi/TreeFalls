@@ -11,9 +11,28 @@
 # TreeFalls
 Smooth tree falling Paper/Folia plugin.
 
+<img src="TreeFalls.gif" alt="tree falls" width="640" height="360" loop=infinite>
 
 ## Usage
 
-Download the latest version from [the releases][downloadLink]. Start your server. Edit the config to match your expected limitation. Then reload ingame with `/tf reload`.
+Download the latest version from [the releases][downloadLink]. Start your server.
 
-Each time you change the configuration, reload or restart your server.
+## Config
+
+You can change the configuration in the `config.yml` file.
+Each time you change the configuration, reload with `/tf reload` or restart your server.
+
+In the config you can set :
+- The number of blocks that the player can break at once.
+- The list of gamemode where the player is can cut trees by breaking a single log.
+- The list of materials that are concidered as trees.
+- The list of tools that are concidered as breaking tree tools.
+
+
+## Statistics
+[![bStats Graph Data](https://bstats.org/signatures/bukkit/treefalls.svg)](https://bstats.org/plugin/bukkit/TreeFalls/29518)
+
+## Build
+Clone the project from [GitHub](https://github.com/Mvndi/TreeFalls).
+`./gradlew assemble`
+The plugin jar file will be in build/libs/

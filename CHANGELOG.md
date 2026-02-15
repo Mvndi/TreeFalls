@@ -1,4 +1,8 @@
+# 0.1.0
+Full tree can be cut.
 
+# 0.0.3
+Make axes & woods configurable.
 
 # 0.0.2
 When broken, logs & woods fall as sand/gravel does then break when reaching the ground.

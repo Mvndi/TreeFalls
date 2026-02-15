@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "net.mvndicraft.treefalls"
-version = "0.0.3"
+version = "0.1.0"
 description = "Smooth tree falling when a log get broken by an axe"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"

@@ -32,7 +32,9 @@ In the config you can set :
 ## Claim plugins
 
 Trees can't be cut in protected area for any protection plugin if it does not have blocks outside of the protected area.
-Towny town get an extra layer of protection, trying to cut a tree half in a foreign town will cut only the half outside of the town.
+[Towny](https://github.com/TownyAdvanced/Towny) towns get an extra layer of protection, trying to cut a tree half in a foreign town will cut only the half outside of the town.
+
+There is no dependency require for this plugin.
 
 
 ## Statistics

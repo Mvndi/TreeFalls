@@ -32,8 +32,9 @@ public class BrokenLogListener implements Listener {
     private void cutTree(Block block, Player player) {
         TreeFallsPlugin.debug("Cutting tree");
         int maxTreeSize = TreeFallsPlugin.getInstance().getConfig().getInt("max_tree_size", 256);
+        // TODO make sure the 9 Up face are done, then the 8 face around and then the 9 Down face
         List<BlockFace> nextBlocks = List.of(BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST,
-                BlockFace.DOWN);
+                BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST, BlockFace.DOWN);
         Queue<Block> woodQueue = new LinkedList<>();
         woodQueue.add(block);
         int cuttedBlocks = 0;

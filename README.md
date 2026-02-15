@@ -12,7 +12,7 @@
 
 Smooth tree falling Paper/Folia plugin.
 
-<img src="TreeFalls.gif" alt="tree falls" width="640" height="360" loop=infinite>
+<img src="https://github.com/Mvndi/TreeFalls/blob/main/TreeFalls.gif?raw=true" alt="tree falls" width="640" height="360" loop=infinite>
 
 ## Usage
 

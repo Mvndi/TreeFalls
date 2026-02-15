@@ -14,9 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class BrokenLogListener implements Listener {
@@ -54,29 +51,15 @@ public class BrokenLogListener implements Listener {
             cuttedBlocks++;
         }
         TreeFallsPlugin.debug("Cutted " + cuttedBlocks + " blocks");
-        TreeFallsPlugin.debug("Can axes still be used? " + (getDurability(player.getInventory().getItemInMainHand()) > 0));
         TreeFallsPlugin.debug("Can more blocks be cut? " + (cuttedBlocks < maxTreeSize));
         TreeFallsPlugin.debug("Is queue empty? " + woodQueue.isEmpty());
     }
 
     private boolean reduceDurability(Player player) {
-        if (getDurability(player.getInventory().getItemInMainHand()) > 0) {
-            player.getInventory().getItemInMainHand().damage(1, player);
-            return true;
-        }
-        return false;
+        player.getInventory().getItemInMainHand().damage(1, player);
+        return true;
     }
 
-    private int getDurability(ItemStack item) {
-        if (item == null || item.getType().isAir())
-            return 0;
-
-        ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof Damageable damageable))
-            return 0;
-
-        return damageable.getDamage();
-    }
 
     private void fallBlock(Block block) {
         Location location = block.getLocation();

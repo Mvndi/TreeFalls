@@ -1,3 +1,6 @@
+# 0.1.1
+Fix not damaged tools not being able to cut trees.
+
 # 0.1.0
 Full tree can be cut.
 

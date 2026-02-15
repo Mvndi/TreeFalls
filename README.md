@@ -34,5 +34,12 @@ In the config you can set :
 
 ## Build
 Clone the project from [GitHub](https://github.com/Mvndi/TreeFalls).
-`./gradlew assemble`
+
+Run `./gradlew assemble`
 The plugin jar file will be in build/libs/
+
+You can also start a test server directly from Gradle with `./gradlew runPaper`
+
+## Thanks
+Thanks to [SmoothTimber](https://github.com/SourceWriters/SmoothTimber) that inspired this project.
+This project is kind of a simplified version of SmoothTimber with modern tools (Maven -> Gradle, Spigot -> Paper, Manual run -> auto run with runPaper), much less dependencies and no legacy support (1.20+).

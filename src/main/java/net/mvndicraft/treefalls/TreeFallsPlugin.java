@@ -1,7 +1,9 @@
 package net.mvndicraft.treefalls;
 
 import co.aikar.commands.PaperCommandManager;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -30,14 +32,6 @@ public class TreeFallsPlugin extends JavaPlugin {
         // Save config in our plugin data folder if it does not exist.
         saveDefaultConfig();
 
-        woods = Stream.of(Material.values()).filter(material -> (material.name().endsWith("_LOG") || material.name().endsWith("_WOOD"))
-                && !material.name().startsWith("LEGACY_")).collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
-        debug(() -> "woods set: " + woods.toString());
-
-        axes = Stream.of(Material.values()).filter(material -> material.name().endsWith("_AXE") && !material.name().startsWith("LEGACY_"))
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
-        debug(() -> "axes set: " + axes.toString());
-
         PaperCommandManager manager = new PaperCommandManager(this);
         manager.registerCommand(new TreeFallsCommand());
 
@@ -48,6 +42,12 @@ public class TreeFallsPlugin extends JavaPlugin {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
+        woods = getConfigMaterials("woods", List.of(".*_LOG", ".*_WOOD"));
+        debug(() -> "woods set: " + woods.toString());
+
+        axes = getConfigMaterials("axes", List.of(".*_AXE"));
+        debug(() -> "axes set: " + axes.toString());
+
         gameModes = getConfigGameMode("enabled_gamemode");
         debug("gameModes: " + gameModes);
     }
@@ -60,6 +60,10 @@ public class TreeFallsPlugin extends JavaPlugin {
     public NamespacedKey getFallingLogKey() { return fallingLogKey; }
 
     private Set<GameMode> getConfigGameMode(String key) {
+        if (!getConfig().isList(key)) {
+            getLogger().warning(() -> "Invalid GameModes in config at '" + key + "': " + getConfig().get(key));
+            return EnumSet.noneOf(GameMode.class);
+        }
         return getConfig().getStringList(key).stream().map(gm -> safeMatchGameMode(gm, key)).filter(Objects::nonNull)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(GameMode.class)));
     }
@@ -72,6 +76,20 @@ public class TreeFallsPlugin extends JavaPlugin {
             getLogger().warning(() -> "Invalid GameMode in config at '" + key + "': " + name);
             return null;
         }
+    }
+
+    private Set<Material> getConfigMaterials(String key, List<String> defaultRegexList) {
+        List<String> regexList = new ArrayList<>();
+        if (getConfig().contains(key)) {
+            regexList.addAll(getConfig().getStringList(key));
+        } else {
+            getLogger().warning(() -> "Invalid materials in config at '" + key + "'" + getConfig().get(key));
+            regexList.addAll(defaultRegexList);
+        }
+
+        return Stream.of(Material.values()).filter(material -> regexList.stream().anyMatch(s -> material.toString().matches(s)))
+                .filter(material -> !material.name().startsWith("LEGACY_"))
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
     }
 
 

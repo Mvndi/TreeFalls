@@ -4,3 +4,17 @@ debug: false
 # Default: SURVIVAL
 enabled_gamemode:
   - SURVIVAL
+
+# List of materials that are concidered as trees.
+# Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
+# Example : ["ICE", ".*_LOG", "IRON_ORE"]
+woods:
+  - ".*_LOG"
+  - ".*_WOOD"
+  - "MANGROVE_ROOTS"
+
+# List of tools that are concidered as breaking tree tools.
+# Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
+# Example : ["ICE", ".*_LOG", "IRON_ORE"]
+axes:
+  - ".*_AXE"

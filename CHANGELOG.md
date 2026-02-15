@@ -1,3 +1,8 @@
+# 1.0.0
+Break woods & logs connected to the broken block by a face, an edge or a corner.
+Avoid adding block to the queue more than once.
+Fix axes being able to break more blocks than it have durability left.
+
 # 0.1.1
 Fix not damaged tools not being able to cut trees.
 

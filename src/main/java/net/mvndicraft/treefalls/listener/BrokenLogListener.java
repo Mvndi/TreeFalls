@@ -14,6 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class BrokenLogListener implements Listener {
@@ -32,9 +35,6 @@ public class BrokenLogListener implements Listener {
     private void cutTree(Block block, Player player) {
         TreeFallsPlugin.debug("Cutting tree");
         int maxTreeSize = TreeFallsPlugin.getInstance().getConfig().getInt("max_tree_size", 256);
-        // TODO make sure the 9 Up face are done, then the 8 face around and then the 9 Down face
-        List<BlockFace> nextBlocks = List.of(BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST,
-                BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST, BlockFace.DOWN);
         Queue<Block> woodQueue = new LinkedList<>();
         woodQueue.add(block);
         int cuttedBlocks = 0;
@@ -42,9 +42,8 @@ public class BrokenLogListener implements Listener {
             block = woodQueue.poll();
             fallBlock(block);
             TreeFallsPlugin.debug("Falling block: " + block);
-            for (BlockFace face : nextBlocks) {
-                Block nextBlock = block.getRelative(face);
-                if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType())) {
+            for (Block nextBlock : getNextBlocks(block)) {
+                if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType()) && !woodQueue.contains(nextBlock)) {
                     woodQueue.add(nextBlock);
                     TreeFallsPlugin.debug("Added block to queue: " + nextBlock);
                 }
@@ -56,9 +55,50 @@ public class BrokenLogListener implements Listener {
         TreeFallsPlugin.debug("Is queue empty? " + woodQueue.isEmpty());
     }
 
+    private List<Block> getNextBlocks(Block block) {
+        List<Block> nextBlocks = new LinkedList<>();
+        // 1 block up
+        nextBlocks.add(block.getRelative(BlockFace.UP));
+        nextBlocks.addAll(getSideBlocks(block.getRelative(BlockFace.UP)));
+        // same level
+        nextBlocks.addAll(getSideBlocks(block));
+        // 1 block down
+        nextBlocks.add(block.getRelative(BlockFace.DOWN));
+        nextBlocks.addAll(getSideBlocks(block.getRelative(BlockFace.DOWN)));
+        return nextBlocks;
+    }
+    private List<Block> getSideBlocks(Block block) {
+        return List.of(block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH), block.getRelative(BlockFace.WEST),
+                block.getRelative(BlockFace.EAST), block.getRelative(BlockFace.NORTH_WEST), block.getRelative(BlockFace.NORTH_EAST),
+                block.getRelative(BlockFace.SOUTH_WEST), block.getRelative(BlockFace.SOUTH_EAST));
+    }
+
     private boolean reduceDurability(Player player) {
+        if (getDurability(player.getInventory().getItemInMainHand()) == 0) {
+            return false;
+        }
         player.getInventory().getItemInMainHand().damage(1, player);
         return true;
+    }
+
+    private int getDurability(ItemStack item) {
+        if (item == null || item.getType().isAir()) {
+            return 0;
+        }
+
+        int max = item.getType().getMaxDurability();
+        if (max <= 0) {
+            return 0; // Not a damageable item
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (!(meta instanceof Damageable damageable)) {
+            return max; // Undamaged
+        }
+
+        int damage = damageable.hasDamage() ? damageable.getDamage() : 0;
+
+        return max - damage;
     }
 
 

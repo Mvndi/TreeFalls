@@ -6,3 +6,8 @@ folia-supported: true
 authors: [ Hydrolien ]
 description: $description
 website: mvndicraft.net
+dependencies:
+  server:
+    Towny:
+      required: false
+      load: BEFORE

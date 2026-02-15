@@ -15,6 +15,7 @@ import net.mvndicraft.treefalls.listener.BrokenLogListener;
 import net.mvndicraft.treefalls.listener.FallingLogListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public class TreeFallsPlugin extends JavaPlugin {
     private Set<Material> axes;
     private Set<GameMode> gameModes;
     private NamespacedKey fallingLogKey = new NamespacedKey(this, "falling_log");
+    private boolean townyEnabled;
     @Override
     public void onEnable() {
         new Metrics(this, 29518);
@@ -37,6 +39,8 @@ public class TreeFallsPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new BrokenLogListener(), this);
         getServer().getPluginManager().registerEvents(new FallingLogListener(), this);
+
+        townyEnabled = getServer().getPluginManager().getPlugin("Towny") != null;
     }
 
     @Override
@@ -58,6 +62,11 @@ public class TreeFallsPlugin extends JavaPlugin {
     public boolean isAxe(Material material) { return axes.contains(material); }
     public boolean isGameModeOK(Player player) { return gameModes.contains(player.getGameMode()); }
     public NamespacedKey getFallingLogKey() { return fallingLogKey; }
+
+    // true if Towny is not enabled or if the player has Towny perms
+    public boolean hasTownyPerms(Player player, Location location, Material material) {
+        return !townyEnabled || TownyPerms.canBreak(player, location, material);
+    }
 
     private Set<GameMode> getConfigGameMode(String key) {
         if (!getConfig().isList(key)) {

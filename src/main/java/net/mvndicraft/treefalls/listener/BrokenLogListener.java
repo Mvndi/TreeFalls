@@ -12,6 +12,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,9 @@ import org.bukkit.persistence.PersistentDataType;
 public class BrokenLogListener implements Listener {
 
     // Towny & most other plugins compatibility works by ignoring cancelled events
-    @EventHandler(ignoreCancelled = true)
+    // HIGHEST priority to allow Towny or other plugin to cancel the event.
+    // Towny get an extra test to avoid breaking trees that are half in a claim.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLogBroken(BlockBreakEvent event) {
         if (TreeFallsPlugin.getInstance().isWood(event.getBlock().getType())
                 && TreeFallsPlugin.getInstance().isAxe(event.getPlayer().getInventory().getItemInMainHand().getType())
@@ -40,15 +43,17 @@ public class BrokenLogListener implements Listener {
         int cuttedBlocks = 0;
         while (!woodQueue.isEmpty() && cuttedBlocks < maxTreeSize && reduceDurability(player)) {
             block = woodQueue.poll();
-            fallBlock(block);
-            TreeFallsPlugin.debug("Falling block: " + block);
-            for (Block nextBlock : getNextBlocks(block)) {
-                if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType()) && !woodQueue.contains(nextBlock)) {
-                    woodQueue.add(nextBlock);
-                    TreeFallsPlugin.debug("Added block to queue: " + nextBlock);
+            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType())) {
+                fallBlock(block);
+                TreeFallsPlugin.debug("Falling block: " + block);
+                for (Block nextBlock : getNextBlocks(block)) {
+                    if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType()) && !woodQueue.contains(nextBlock)) {
+                        woodQueue.add(nextBlock);
+                        TreeFallsPlugin.debug("Added block to queue: " + nextBlock);
+                    }
                 }
+                cuttedBlocks++;
             }
-            cuttedBlocks++;
         }
         TreeFallsPlugin.debug("Cutted " + cuttedBlocks + " blocks");
         TreeFallsPlugin.debug("Can more blocks be cut? " + (cuttedBlocks < maxTreeSize));

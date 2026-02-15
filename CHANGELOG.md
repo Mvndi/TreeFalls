@@ -1,3 +1,6 @@
+# 1.1.0
+Add towny compatibilty & most other claim plugins partial compatibility.
+
 # 1.0.0
 Break woods & logs connected to the broken block by a face, an edge or a corner.
 Avoid adding block to the queue more than once.

@@ -26,8 +26,8 @@ Each time you change the configuration, reload with `/tf reload` or restart your
 In the config you can set :
 - The number of blocks that the player can break at once.
 - The list of gamemode where the player is can cut trees by breaking a single log.
-- The list of materials that are concidered as trees.
-- The list of tools that are concidered as breaking tree tools.
+- The list of materials that are considered as trees.
+- The list of tools that are considered as breaking tree tools.
 
 ## Claim plugins
 

@@ -29,7 +29,8 @@ public class BrokenLogListener implements Listener {
     public void onLogBroken(BlockBreakEvent event) {
         if (TreeFallsPlugin.getInstance().isWood(event.getBlock().getType())
                 && TreeFallsPlugin.getInstance().isAxe(event.getPlayer().getInventory().getItemInMainHand().getType())
-                && TreeFallsPlugin.getInstance().isGameModeOK(event.getPlayer())) {
+                && TreeFallsPlugin.getInstance().isGameModeOK(event.getPlayer())
+                && TreeFallsPlugin.getInstance().isSneakingOK(event.getPlayer())) {
             event.setCancelled(true);
             cutTree(event.getBlock(), event.getPlayer());
         }

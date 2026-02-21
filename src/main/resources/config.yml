@@ -8,6 +8,9 @@ max_tree_size: 256
 enabled_gamemode:
   - SURVIVAL
 
+# If true, the player will not be able to cut trees while sneaking.
+sneaking_disable_tree_cut: true
+
 # List of materials that are considered as trees.
 # Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
 # Example : ["ICE", ".*_LOG", "IRON_ORE"]

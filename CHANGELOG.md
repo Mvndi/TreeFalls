@@ -1,3 +1,6 @@
+# 1.1.1
+Sneaking disable tree cut.
+
 # 1.1.0
 Add towny compatibilty & most other claim plugins partial compatibility.
 

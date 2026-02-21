@@ -61,6 +61,7 @@ public class TreeFallsPlugin extends JavaPlugin {
     public boolean isWood(Material material) { return woods.contains(material); }
     public boolean isAxe(Material material) { return axes.contains(material); }
     public boolean isGameModeOK(Player player) { return gameModes.contains(player.getGameMode()); }
+    public boolean isSneakingOK(Player player) { return !getConfig().getBoolean("sneaking_disable_tree_cut") || !player.isSneaking(); }
     public NamespacedKey getFallingLogKey() { return fallingLogKey; }
 
     // true if Towny is not enabled or if the player has Towny perms

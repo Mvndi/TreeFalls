@@ -23,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TreeFallsPlugin extends JavaPlugin {
     private Set<Material> woods;
+    private Set<Material> leaves;
     private Set<Material> axes;
     private Set<GameMode> gameModes;
     private NamespacedKey fallingLogKey = new NamespacedKey(this, "falling_log");
@@ -49,6 +50,14 @@ public class TreeFallsPlugin extends JavaPlugin {
         woods = getConfigMaterials("woods", List.of(".*_LOG", ".*_WOOD"));
         debug(() -> "woods set: " + woods.toString());
 
+        if (getConfig().getBoolean("leaves_falls", false)) {
+            leaves = getConfigMaterials("leaves", List.of(".*_LEAVES"));
+            debug(() -> "leaves set: " + leaves.toString());
+        } else {
+            leaves = EnumSet.noneOf(Material.class);
+            debug(() -> "leaves set is empty because leaves_falls is false");
+        }
+
         axes = getConfigMaterials("axes", List.of(".*_AXE"));
         debug(() -> "axes set: " + axes.toString());
 
@@ -59,6 +68,7 @@ public class TreeFallsPlugin extends JavaPlugin {
     public static TreeFallsPlugin getInstance() { return getPlugin(TreeFallsPlugin.class); }
 
     public boolean isWood(Material material) { return woods.contains(material); }
+    public boolean isLeaves(Material material) { return leaves.contains(material); }
     public boolean isAxe(Material material) { return axes.contains(material); }
     public boolean isGameModeOK(Player player) { return gameModes.contains(player.getGameMode()); }
     public boolean isSneakingOK(Player player) { return !getConfig().getBoolean("sneaking_disable_tree_cut") || !player.isSneaking(); }

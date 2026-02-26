@@ -1,14 +1,18 @@
 package net.mvndicraft.treefalls.listener;
 
+import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import net.mvndicraft.treefalls.TreeFallsPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,28 +41,68 @@ public class BrokenLogListener implements Listener {
     }
 
     private void cutTree(Block block, Player player) {
+        long start = System.currentTimeMillis();
         TreeFallsPlugin.debug("Cutting tree");
-        int maxTreeSize = TreeFallsPlugin.getInstance().getConfig().getInt("max_tree_size", 256);
-        Queue<Block> woodQueue = new LinkedList<>();
+        int maxWoodBlocksFalling = TreeFallsPlugin.getInstance().getConfig().getInt("max_wood_blocks_falling", 256);
+        Queue<Block> woodQueue = new ArrayDeque<>();
+        Set<Block> visitedWoodBlocks = new HashSet<>();
+        Queue<Block> leavesQueue = new ArrayDeque<>();
+        Set<Block> visitedLeavesBlocks = new HashSet<>();
+
         woodQueue.add(block);
+        visitedWoodBlocks.add(block);
+
         int cuttedBlocks = 0;
-        while (!woodQueue.isEmpty() && cuttedBlocks < maxTreeSize && reduceDurability(player)) {
+        while (!woodQueue.isEmpty() && cuttedBlocks < maxWoodBlocksFalling && reduceDurability(player)) {
             block = woodQueue.poll();
             if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType())) {
                 fallBlock(block);
-                TreeFallsPlugin.debug("Falling block: " + block);
+                // TreeFallsPlugin.debug("Falling block: " + block);
                 for (Block nextBlock : getNextBlocks(block)) {
-                    if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType()) && !woodQueue.contains(nextBlock)) {
+                    if (TreeFallsPlugin.getInstance().isWood(nextBlock.getType()) && visitedWoodBlocks.add(nextBlock)) {
                         woodQueue.add(nextBlock);
-                        TreeFallsPlugin.debug("Added block to queue: " + nextBlock);
+                        TreeFallsPlugin.debug("Added wood block to queue: " + nextBlock);
+                    } else if (TreeFallsPlugin.getInstance().isLeaves(nextBlock.getType()) && visitedLeavesBlocks.add(nextBlock)) {
+                        leavesQueue.add(nextBlock);
+                        TreeFallsPlugin.debug("Added leaves block to queue from wood proximity: " + nextBlock);
                     }
                 }
                 cuttedBlocks++;
             }
         }
-        TreeFallsPlugin.debug("Cutted " + cuttedBlocks + " blocks");
-        TreeFallsPlugin.debug("Can more blocks be cut? " + (cuttedBlocks < maxTreeSize));
-        TreeFallsPlugin.debug("Is queue empty? " + woodQueue.isEmpty());
+        TreeFallsPlugin.debug("Cutted " + cuttedBlocks + " wood blocks");
+        TreeFallsPlugin.debug("Can more blocks be cut? " + (cuttedBlocks < maxWoodBlocksFalling));
+        TreeFallsPlugin.debug(() -> "Is queue empty? " + woodQueue.isEmpty() + " woodQueue size: " + woodQueue.size());
+
+        // Bukkit.getRegionScheduler().runDelayed(TreeFallsPlugin.getInstance(), block.getLocation(), t -> fallLeaves(leavesQueue, player),
+        // 2);
+        fallLeaves(leavesQueue, visitedLeavesBlocks, player);
+
+        long end = System.currentTimeMillis();
+        TreeFallsPlugin.debug("Cut tree in " + (end - start) + "ms");
+    }
+
+    private void fallLeaves(Queue<Block> leavesQueue, Set<Block> visitedLeavesBlocks, Player player) {
+        int cuttedBlocks = 0;
+        int maxLeavesBlocksFalling = TreeFallsPlugin.getInstance().getConfig().getInt("max_leaves_blocks_falling", 256);
+        while (!leavesQueue.isEmpty() && cuttedBlocks < maxLeavesBlocksFalling) {
+            Block block = leavesQueue.poll();
+            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType()) && shouldLeaveFall(block)) {
+                fallBlock(block);
+                // TreeFallsPlugin.debug("Falling block: " + block);
+                for (Block nextBlock : getConnectedBlocks(block)) {
+                    if (TreeFallsPlugin.getInstance().isLeaves(nextBlock.getType()) && visitedLeavesBlocks.add(nextBlock)) {
+                        leavesQueue.add(nextBlock);
+                        TreeFallsPlugin.debug("Added leaves block to queue from leaves proximity: " + nextBlock);
+                    }
+                }
+                cuttedBlocks++;
+            }
+        }
+
+        TreeFallsPlugin.debug("Cutted " + cuttedBlocks + " leaves blocks");
+        TreeFallsPlugin.debug("Can more blocks be cut? " + (cuttedBlocks < maxLeavesBlocksFalling));
+        TreeFallsPlugin.debug(() -> "Is queue empty? " + leavesQueue.isEmpty() + " leavesQueue size: " + leavesQueue.size());
     }
 
     private List<Block> getNextBlocks(Block block) {
@@ -77,6 +121,11 @@ public class BrokenLogListener implements Listener {
         return List.of(block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH), block.getRelative(BlockFace.WEST),
                 block.getRelative(BlockFace.EAST), block.getRelative(BlockFace.NORTH_WEST), block.getRelative(BlockFace.NORTH_EAST),
                 block.getRelative(BlockFace.SOUTH_WEST), block.getRelative(BlockFace.SOUTH_EAST));
+    }
+
+    private List<Block> getConnectedBlocks(Block block) {
+        return List.of(block.getRelative(BlockFace.UP), block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH),
+                block.getRelative(BlockFace.WEST), block.getRelative(BlockFace.EAST), block.getRelative(BlockFace.DOWN));
     }
 
     private boolean reduceDurability(Player player) {
@@ -117,5 +166,57 @@ public class BrokenLogListener implements Listener {
             entity.getPersistentDataContainer().set(TreeFallsPlugin.getInstance().getFallingLogKey(), PersistentDataType.BOOLEAN, true);
             entity.setDropItem(true);
         });
+    }
+
+    /**
+     * True if is is not persistent & not near a wood block (distance < 7)
+     * Or true if it's not a leave, then we ignore special leave rules.
+     */
+    private boolean shouldLeaveFall(Block block) {
+        if (block.getBlockData() instanceof Leaves leaves) {
+            boolean shouldLeaveFall = (!leaves.isPersistent() && !isNearAnyLog(block));
+            TreeFallsPlugin.debug("Should leave fall? " + shouldLeaveFall);
+            TreeFallsPlugin.debug("leaves.isPersistent()? " + leaves.isPersistent());
+
+            return shouldLeaveFall;
+        }
+        return true;
+    }
+
+    private boolean isNearAnyLog(Block start) {
+        int maxDistance = 6;
+
+        Queue<Block> queue = new ArrayDeque<>();
+        Set<Block> visited = new HashSet<>();
+
+        queue.add(start);
+        visited.add(start);
+
+        int depth = 0;
+
+        while (!queue.isEmpty() && depth <= maxDistance) {
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+                Block block = queue.poll();
+
+                if (TreeFallsPlugin.getInstance().isWood(block.getType())) {
+                    return true; // ANY log in world
+                }
+
+                for (Block next : getConnectedBlocks(block)) {
+                    if (!visited.contains(next) && (TreeFallsPlugin.getInstance().isLeaves(next.getType())
+                            || TreeFallsPlugin.getInstance().isWood(next.getType()))) {
+
+                        visited.add(next);
+                        queue.add(next);
+                    }
+                }
+            }
+
+            depth++;
+        }
+
+        return false;
     }
 }

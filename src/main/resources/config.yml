@@ -1,7 +1,7 @@
 debug: false
 
-# Number of blocks that the player can break at once.
-max_tree_size: 256
+# Number of wood blocks that the player can break at once.
+max_wood_blocks_falling: 256
 
 # List of game mode where the player is can cut trees by breaking a single log.
 # Default: SURVIVAL
@@ -11,7 +11,7 @@ enabled_gamemode:
 # If true, the player will not be able to cut trees while sneaking.
 sneaking_disable_tree_cut: true
 
-# List of materials that are considered as trees.
+# List of materials that are considered as tree trunks.
 # Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
 # Example : ["ICE", ".*_LOG", "IRON_ORE"]
 woods:
@@ -24,3 +24,20 @@ woods:
 # Example : ["ICE", ".*_LOG", "IRON_ORE"]
 axes:
   - ".*_AXE"
+
+
+# Leaves ----------------------------------------------------------------------
+# Leaves will only fall if connected to a wood block.
+
+# If true, the leaves will fall with the tree.
+leaves_falls: false
+
+# Number of leaves blocks that the player can break at once.
+max_leaves_blocks_falling: 256
+
+# List of materials that are considered as tree leaves.
+# Leaves only fall if not connected to a wood block that haven't been cut.
+# Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
+# Example : ["ICE", ".*_LOG", "IRON_ORE"]
+leaves:
+  - ".*_LEAVES"

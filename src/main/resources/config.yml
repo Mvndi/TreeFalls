@@ -30,7 +30,7 @@ axes:
 # Leaves will only fall if connected to a wood block.
 
 # If true, the leaves will fall with the tree.
-leaves_falls: false
+leaves_falls: true
 
 # Number of leaves blocks that the player can break at once.
 max_leaves_blocks_falling: 256

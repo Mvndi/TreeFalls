@@ -50,7 +50,7 @@ public class TreeFallsPlugin extends JavaPlugin {
         woods = getConfigMaterials("woods", List.of(".*_LOG", ".*_WOOD"));
         debug(() -> "woods set: " + woods.toString());
 
-        if (getConfig().getBoolean("leaves_falls", false)) {
+        if (getConfig().getBoolean("leaves_falls", true)) {
             leaves = getConfigMaterials("leaves", List.of(".*_LEAVES"));
             debug(() -> "leaves set: " + leaves.toString());
         } else {

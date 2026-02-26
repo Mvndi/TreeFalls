@@ -1,3 +1,6 @@
+# 1.2.0
+Make leaves falls with the trunk. It can be disable in the config.
+
 # 1.1.1
 Sneaking disable tree cut.
 

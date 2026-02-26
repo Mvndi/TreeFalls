@@ -28,6 +28,11 @@ In the config you can set :
 - The list of gamemode where the player is can cut trees by breaking a single log.
 - The list of materials that are considered as trees.
 - The list of tools that are considered as breaking tree tools.
+- If the leaves should fall or not. True by default.
+- The number of leaves that can fall at once.
+- The list of materials that are considered as leaves.
+
+If enabled, the leaves will only fall if they are not connected to an other tree. Leaves drop item from there loot table as if they where broken by hand, exept if they fall on a block that break them as a torch, then they drop leaves.
 
 ## Claim plugins
 

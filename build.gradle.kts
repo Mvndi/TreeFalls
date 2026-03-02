@@ -27,6 +27,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.aikar.co/content/groups/aikar/")
     maven("https://repo.glaremasters.me/repository/towny/")
+    maven("https://maven.playpro.com")
 }
 
 dependencies {

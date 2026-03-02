@@ -1,3 +1,6 @@
+# 1.2.1
+Falling leaves that hit a torch or and other not full block on the ground drop as if they where broken by hand instead of dropping leaves.
+
 # 1.2.0
 Make leaves falls with the trunk. It can be disable in the config.
 

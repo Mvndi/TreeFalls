@@ -34,7 +34,8 @@ public class BrokenLogListener implements Listener {
         if (TreeFallsPlugin.getInstance().isWood(event.getBlock().getType())
                 && TreeFallsPlugin.getInstance().isAxe(event.getPlayer().getInventory().getItemInMainHand().getType())
                 && TreeFallsPlugin.getInstance().isGameModeOK(event.getPlayer())
-                && TreeFallsPlugin.getInstance().isSneakingOK(event.getPlayer())) {
+                && TreeFallsPlugin.getInstance().isSneakingOK(event.getPlayer())
+                && TreeFallsPlugin.getInstance().isNaturalBlock(event.getBlock())) {
             event.setCancelled(true);
             cutTree(event.getBlock(), event.getPlayer());
         }
@@ -55,7 +56,8 @@ public class BrokenLogListener implements Listener {
         int cuttedBlocks = 0;
         while (!woodQueue.isEmpty() && cuttedBlocks < maxWoodBlocksFalling && reduceDurability(player)) {
             block = woodQueue.poll();
-            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType())) {
+            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType())
+                    && (TreeFallsPlugin.getInstance().isNaturalBlock(block))) {
                 fallBlock(block);
                 // TreeFallsPlugin.debug("Falling block: " + block);
                 for (Block nextBlock : getNextBlocks(block)) {
@@ -87,7 +89,8 @@ public class BrokenLogListener implements Listener {
         int maxLeavesBlocksFalling = TreeFallsPlugin.getInstance().getConfig().getInt("max_leaves_blocks_falling", 256);
         while (!leavesQueue.isEmpty() && cuttedBlocks < maxLeavesBlocksFalling) {
             Block block = leavesQueue.poll();
-            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType()) && shouldLeaveFall(block)) {
+            if (TreeFallsPlugin.getInstance().hasTownyPerms(player, block.getLocation(), block.getType()) && shouldLeaveFall(block)
+                    && TreeFallsPlugin.getInstance().isNaturalBlock(block)) {
                 fallBlock(block);
                 // TreeFallsPlugin.debug("Falling block: " + block);
                 for (Block nextBlock : getConnectedBlocks(block)) {

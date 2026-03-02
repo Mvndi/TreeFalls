@@ -11,12 +11,13 @@ plugins {
 }
 
 group = "net.mvndicraft.treefalls"
-version = "1.2.0"
+version = "1.3.0"
 description = "Smooth tree falling when a log get broken by an axe"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
 val supportedMinecraftVersions = "1.20 - 1.21.11"
 val townyVersion = "0.102.0.7"
+val coreprotectVersion = "23.1"
 
 repositories {
     mavenLocal()
@@ -31,6 +32,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
+    compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
@@ -85,6 +87,7 @@ tasks {
     runServer {
         downloadPlugins {
             github("TownyAdvanced", "Towny", "$townyVersion", "towny-$townyVersion.jar") // we can't use the latest release because it's inside a zip.
+            modrinth("coreprotect", "$coreprotectVersion")
         }
         minecraftVersion("$mainMinecraftVersion")
     }

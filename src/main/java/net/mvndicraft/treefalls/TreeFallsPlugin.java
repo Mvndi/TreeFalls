@@ -18,6 +18,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,7 @@ public class TreeFallsPlugin extends JavaPlugin {
     private Set<GameMode> gameModes;
     private NamespacedKey fallingLogKey = new NamespacedKey(this, "falling_log");
     private boolean townyEnabled;
+    private boolean coreProtectEnabled;
     @Override
     public void onEnable() {
         new Metrics(this, 29518);
@@ -42,6 +44,7 @@ public class TreeFallsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FallingLogListener(), this);
 
         townyEnabled = getServer().getPluginManager().getPlugin("Towny") != null;
+        coreProtectEnabled = getServer().getPluginManager().getPlugin("CoreProtect") != null;
     }
 
     @Override
@@ -77,6 +80,10 @@ public class TreeFallsPlugin extends JavaPlugin {
     // true if Towny is not enabled or if the player has Towny perms
     public boolean hasTownyPerms(Player player, Location location, Material material) {
         return !townyEnabled || TownyPerms.canBreak(player, location, material);
+    }
+
+    public boolean isNaturalBlock(Block block) {
+        return !coreProtectEnabled || !getConfig().getBoolean("ignorePlayerPlacedBlock", true) || CoreProtectPerms.isNaturalBlock(block);
     }
 
     private Set<GameMode> getConfigGameMode(String key) {

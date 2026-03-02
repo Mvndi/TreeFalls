@@ -11,6 +11,10 @@ enabled_gamemode:
 # If true, the player will not be able to cut trees while sneaking.
 sneaking_disable_tree_cut: true
 
+# If true, blocks that have been placed by a player won't be cut when cutting a tree.
+# This config settings need CoreProtect to be enabled. cf https://github.com/PlayPro/CoreProtect
+ignore_player_placed_block: true
+
 # List of materials that are considered as tree trunks.
 # Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
 # Example : ["ICE", ".*_LOG", "IRON_ORE"]

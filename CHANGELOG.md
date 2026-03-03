@@ -1,3 +1,6 @@
+# 1.3.1
+Fix CoreProtect compatibility by logging player planted tree as natural.
+
 # 1.3.0
 Ignore player placed logs/woods with CoreProtect.
 

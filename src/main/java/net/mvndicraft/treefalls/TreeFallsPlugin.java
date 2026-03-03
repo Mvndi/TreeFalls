@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.mvndicraft.treefalls.listener.BrokenLogListener;
+import net.mvndicraft.treefalls.listener.CoreProtectListener;
 import net.mvndicraft.treefalls.listener.FallingLogListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.GameMode;
@@ -26,10 +27,12 @@ public class TreeFallsPlugin extends JavaPlugin {
     private Set<Material> woods;
     private Set<Material> leaves;
     private Set<Material> axes;
+    private Set<Material> saplings;
     private Set<GameMode> gameModes;
     private NamespacedKey fallingLogKey = new NamespacedKey(this, "falling_log");
     private boolean townyEnabled;
     private boolean coreProtectEnabled;
+    private int coreProtectTickDelay;
     @Override
     public void onEnable() {
         new Metrics(this, 29518);
@@ -45,6 +48,10 @@ public class TreeFallsPlugin extends JavaPlugin {
 
         townyEnabled = getServer().getPluginManager().getPlugin("Towny") != null;
         coreProtectEnabled = getServer().getPluginManager().getPlugin("CoreProtect") != null;
+
+        if (coreProtectEnabled) {
+            getServer().getPluginManager().registerEvents(new CoreProtectListener(), this);
+        }
     }
 
     @Override
@@ -66,6 +73,11 @@ public class TreeFallsPlugin extends JavaPlugin {
 
         gameModes = getConfigGameMode("enabled_gamemode");
         debug("gameModes: " + gameModes);
+
+        saplings = getConfigMaterials("saplings", List.of(".*_SAPLING", ".*_PROPAGULE"), List.of("LEGACY_.*", "POTTED_.*"));
+        debug(() -> "saplings set: " + saplings.toString());
+
+        coreProtectTickDelay = Math.max(1, getConfig().getInt("coreprotect_tick_delay", 1));
     }
 
     public static TreeFallsPlugin getInstance() { return getPlugin(TreeFallsPlugin.class); }
@@ -73,8 +85,10 @@ public class TreeFallsPlugin extends JavaPlugin {
     public boolean isWood(Material material) { return woods.contains(material); }
     public boolean isLeaves(Material material) { return leaves.contains(material); }
     public boolean isAxe(Material material) { return axes.contains(material); }
+    public boolean isSapling(Material material) { return saplings.contains(material); }
     public boolean isGameModeOK(Player player) { return gameModes.contains(player.getGameMode()); }
     public boolean isSneakingOK(Player player) { return !getConfig().getBoolean("sneaking_disable_tree_cut") || !player.isSneaking(); }
+    public int getCoreProtectTickDelay() { return coreProtectTickDelay; }
     public NamespacedKey getFallingLogKey() { return fallingLogKey; }
 
     // true if Towny is not enabled or if the player has Towny perms
@@ -83,7 +97,7 @@ public class TreeFallsPlugin extends JavaPlugin {
     }
 
     public boolean isNaturalBlock(Block block) {
-        return !coreProtectEnabled || !getConfig().getBoolean("ignorePlayerPlacedBlock", true) || CoreProtectPerms.isNaturalBlock(block);
+        return !coreProtectEnabled || !getConfig().getBoolean("ignore_player_placed_block", true) || CoreProtectPerms.isNaturalBlock(block);
     }
 
     private Set<GameMode> getConfigGameMode(String key) {
@@ -106,6 +120,9 @@ public class TreeFallsPlugin extends JavaPlugin {
     }
 
     private Set<Material> getConfigMaterials(String key, List<String> defaultRegexList) {
+        return getConfigMaterials(key, defaultRegexList, List.of("LEGACY_.*"));
+    }
+    private Set<Material> getConfigMaterials(String key, List<String> defaultRegexList, List<String> excludeRegexList) {
         List<String> regexList = new ArrayList<>();
         if (getConfig().contains(key)) {
             regexList.addAll(getConfig().getStringList(key));
@@ -115,7 +132,7 @@ public class TreeFallsPlugin extends JavaPlugin {
         }
 
         return Stream.of(Material.values()).filter(material -> regexList.stream().anyMatch(s -> material.toString().matches(s)))
-                .filter(material -> !material.name().startsWith("LEGACY_"))
+                .filter(material -> excludeRegexList.stream().noneMatch(s -> material.toString().matches(s)))
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
     }
 

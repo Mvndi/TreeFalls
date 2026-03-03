@@ -19,9 +19,10 @@ public class CoreProtectPerms {
         CoreProtectAPI.ParseResult latestActionResult = coreProtectAPI.parseResult(actionList.get(0));
 
         // not a player action -> natural
+        // A player action from planting a sapling or using bonemeal on a sapling -> natural
         // not a place block action -> natural
         // Does not match the block type -> natural
-        return latestActionResult.getPlayer().isEmpty() || latestActionResult.getActionId() != 1
-                || latestActionResult.getType() != block.getType();
+        return latestActionResult.getPlayer().isEmpty() || latestActionResult.getPlayer().startsWith("#tree")
+                || latestActionResult.getActionId() != 1 || latestActionResult.getType() != block.getType();
     }
 }

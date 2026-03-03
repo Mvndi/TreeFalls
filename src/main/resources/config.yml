@@ -11,9 +11,21 @@ enabled_gamemode:
 # If true, the player will not be able to cut trees while sneaking.
 sneaking_disable_tree_cut: true
 
+# CoreProtect compatibility ---------------------------------------------------
+
 # If true, blocks that have been placed by a player won't be cut when cutting a tree.
 # This config settings need CoreProtect to be enabled. cf https://github.com/PlayPro/CoreProtect
 ignore_player_placed_block: true
+
+# Tick to wait before logging event to CoreProtect so that player grown trees are concidered breakable as trees.
+coreprotect_tick_delay: 1
+
+# If true, player grown trees are considered natural trees and will fall as natural true.
+# This add a new log to CoreProtect for each player grown tree blocks, this log will be checked when a tree is broken and the block will be concidered natural instead of player placed.
+player_grown_trees_are_natural_trees: true
+
+# Woods -----------------------------------------------------------------------
+# Woods are the blocks that the player can cut.
 
 # List of materials that are considered as tree trunks.
 # Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
@@ -29,6 +41,12 @@ woods:
 axes:
   - ".*_AXE"
 
+# List of materials that are considered as tree saplings.
+# Must be define as Material from Paper API: https://jd.papermc.io/paper/org/bukkit/Material.html. Regular expression is allowed.
+# Example : ["ICE", ".*_LOG", "IRON_ORE"]
+saplings:
+  - ".*_SAPLING"
+  - ".*_PROPAGULE"
 
 # Leaves ----------------------------------------------------------------------
 # Leaves will only fall if connected to a wood block.
@@ -37,7 +55,7 @@ axes:
 leaves_falls: true
 
 # Number of leaves blocks that the player can break at once.
-max_leaves_blocks_falling: 256
+max_leaves_blocks_falling: 512
 
 # List of materials that are considered as tree leaves.
 # Leaves only fall if not connected to a wood block that haven't been cut.

@@ -34,12 +34,16 @@ In the config you can set :
 
 If enabled, the leaves will only fall if they are not connected to an other tree. Leaves drop item from there loot table as if they where broken by hand, exept if they fall on a block that break them as a torch, then they drop leaves.
 
-## Claim plugins
+## Other plugins
 
 Trees can't be cut in protected area for any protection plugin if it does not have blocks outside of the protected area.
 [Towny](https://github.com/TownyAdvanced/Towny) towns get an extra layer of protection, trying to cut a tree half in a foreign town will cut only the half outside of the town.
 
+Player placed logs/woods can be protected by [CoreProtect](https://github.com/PlayPro/CoreProtect) to not be concidered as trees. It will work as a soft dependency.
+
 There is no dependency require for this plugin.
+
+Since trees are much easier to cut with this plugin, you might want to disable bone meal on tree with this other plugin [BoneMealLimiter](https://github.com/Mvndi/BoneMealLimiter).
 
 
 ## Statistics

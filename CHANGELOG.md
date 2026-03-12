@@ -1,3 +1,6 @@
+# 1.3.2
+Fix chests where block was falling getting replaced by empty chests.
+
 # 1.3.1
 Fix CoreProtect compatibility by logging player planted tree as natural.
 

@@ -8,10 +8,11 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.1" // Paper server for testing/hotloading JVM
     id("io.papermc.hangar-publish-plugin") version "0.1.3"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
 }
 
 group = "net.mvndicraft.treefalls"
-version = "1.3.1"
+version = "1.3.2"
 description = "Smooth tree falling when a log get broken by an axe"
 java.sourceCompatibility = JavaVersion.VERSION_21
 var mainMinecraftVersion = "1.21.11"
@@ -31,7 +32,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
+    // compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("$mainMinecraftVersion-R0.1-SNAPSHOT")
+    compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
+    
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
 

@@ -1,3 +1,6 @@
+# 1.3.3
+Support from 1.20 to 26.1.2
+
 # 1.3.2
 Fix chests where block was falling getting replaced by empty chests.
 

@@ -47,7 +47,8 @@ public class TreeFallsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FallingLogListener(), this);
 
         townyEnabled = getServer().getPluginManager().getPlugin("Towny") != null;
-        coreProtectEnabled = getServer().getPluginManager().getPlugin("CoreProtect") != null;
+        coreProtectEnabled = getServer().getPluginManager().getPlugin("CoreProtect") != null
+                && getServer().getPluginManager().getPlugin("CoreProtect").isEnabled();
 
         if (coreProtectEnabled) {
             getServer().getPluginManager().registerEvents(new CoreProtectListener(), this);

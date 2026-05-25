@@ -8,7 +8,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "3.0.2" // Paper server for testing/hotloading JVM
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
 }
 
 group = "net.mvndicraft.treefalls"

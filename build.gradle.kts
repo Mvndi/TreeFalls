@@ -17,7 +17,7 @@ description = "Smooth tree falling when a log get broken by an axe"
 val mainMinecraftVersion = "1.21.11" // 26.1.2
 val supportedMinecraftVersions = "1.20 - 26.1.2"
 val townyVersion = "0.102.0.7"
-val coreprotectVersion = "23.1"
+val coreprotectVersion = "23.2"
 
 repositories {
     mavenLocal()

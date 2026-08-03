@@ -12,10 +12,10 @@ plugins {
 }
 
 group = "net.mvndicraft.treefalls"
-version = "1.3.3"
+version = "1.3.4"
 description = "Smooth tree falling when a log get broken by an axe"
-val mainMinecraftVersion = "1.21.11" // 26.1.2
-val supportedMinecraftVersions = "1.20 - 26.1.2"
+val mainMinecraftVersion = "1.21.11" // 26.2
+val supportedMinecraftVersions = "1.20 - 26.2"
 val townyVersion = "0.102.0.7"
 val coreprotectVersion = "23.2"
 
@@ -216,7 +216,8 @@ fun expandMinecraftVersions(range: String): List<String> {
     val latestPatches = linkedMapOf(
         "1.20" to 6,
         "1.21" to 11,
-        "26.1" to 2
+        "26.1" to 2,
+        "26.2" to 0
     )
 
     data class Version(

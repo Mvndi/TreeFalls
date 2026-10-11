@@ -1,4 +1,7 @@
 # 1.3.4
+Support 26.3. All versions below are not supported and need to use 1.3.4.
+
+# 1.3.4
 Support from 1.20 to 26.2
 
 # 1.3.3

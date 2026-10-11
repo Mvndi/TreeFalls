@@ -5,19 +5,19 @@ plugins {
     // checkstyle // Ensures correctly formatted code
     // pmd // Code quality checks
     id("org.sonarqube") version "7.3.0.8198" // Advanced code quality checks
-    id("xyz.jpenilla.run-paper") version "3.0.2" // Paper server for testing/hotloading JVM
+    id("xyz.jpenilla.run-paper") version "3.1.0" // Paper server for testing/hotloading JVM
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("com.modrinth.minotaur") version "2.+" // cf https://github.com/modrinth/minotaur
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
 }
 
 group = "net.mvndicraft.treefalls"
-version = "1.3.4"
+version = "1.4.0"
 description = "Smooth tree falling when a log get broken by an axe"
-val mainMinecraftVersion = "1.21.11" // 26.2
-val supportedMinecraftVersions = "1.20 - 26.2"
-val townyVersion = "0.102.0.7"
-val coreprotectVersion = "23.2"
+val mainMinecraftVersion = "26.3"
+val supportedMinecraftVersions = "26.3 - 26.3"
+val townyVersion = "0.103.2.11"
+val coreprotectVersion = "24.1"
 
 repositories {
     mavenLocal()
@@ -32,9 +32,7 @@ repositories {
 
 dependencies {
     // compileOnly("io.papermc.paper:paper-api:$mainMinecraftVersion-R0.1-SNAPSHOT")
-    paperweight.paperDevBundle("$mainMinecraftVersion-R0.1-SNAPSHOT")
-    // paperweight.paperDevBundle("$mainMinecraftVersion.build.+")
-    compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0") // TODO to remove when paper weight latest version will be fixed. It's supposed to be in paperweight.
+    paperweight.paperDevBundle("$mainMinecraftVersion.build.+")
     
     compileOnly("com.palmergames.bukkit.towny:towny:$townyVersion")
     compileOnly("net.coreprotect:coreprotect:$coreprotectVersion")
@@ -47,7 +45,7 @@ dependencies {
 }
 
 java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(21)) // 25
+  toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 sonar {
@@ -217,7 +215,8 @@ fun expandMinecraftVersions(range: String): List<String> {
         "1.20" to 6,
         "1.21" to 11,
         "26.1" to 2,
-        "26.2" to 0
+        "26.2" to 0,
+        "26.3" to 0
     )
 
     data class Version(
